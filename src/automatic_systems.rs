@@ -1,10 +1,10 @@
-use std::marker::PhantomData;
-
 use crate::{
     SpatialAccess,
     point::{SpatialPoint, VecFromGlobalTransform, VecFromTransform},
     spatial_access::UpdateSpatialAccess,
 };
+use bevy::ecs::component::Mutable;
+use std::marker::PhantomData;
 
 use bevy::{
     ecs::schedule::{ScheduleLabel, SystemSet},
@@ -29,7 +29,7 @@ pub(crate) struct AutoT<SpatialDS>(PhantomData<SpatialDS>);
 impl<SpatialDS> AutoT<SpatialDS>
 where
     GlamVec<SpatialDS>: VecFromTransform,
-    SpatialDS: UpdateSpatialAccess + Resource,
+    SpatialDS: UpdateSpatialAccess + Resource<Mutability = Mutable>,
     <SpatialDS as SpatialAccess>::Point: From<(Entity, GlamVec<SpatialDS>)>,
     SpatialDS::Comp: Component,
 {
@@ -61,7 +61,7 @@ pub(crate) struct AutoGT<SpatialDS>(PhantomData<SpatialDS>);
 impl<SpatialDS> AutoGT<SpatialDS>
 where
     GlamVec<SpatialDS>: VecFromGlobalTransform,
-    SpatialDS: UpdateSpatialAccess + Resource,
+    SpatialDS: UpdateSpatialAccess + Resource<Mutability = Mutable>,
     <SpatialDS as SpatialAccess>::Point: From<(Entity, GlamVec<SpatialDS>)>,
     SpatialDS::Comp: Component,
 {
